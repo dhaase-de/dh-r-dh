@@ -191,3 +191,22 @@
    
    angles
 }
+
+##
+## Probability
+##
+
+"entropy" <- function(...) {
+   p <- c(...)
+   
+   # check arguments
+   if (!is.vector(p) || !is.numeric(p) || any(p < 0)) {
+      stop("The arguments do not describe a valid discrete probability distribution")
+   }
+   
+   # nomalize to sum(p) = 1 (discrete probability distribution)
+   p <- p / sum(p)
+   
+   # definition of entropy
+   sum(-p * log2(p), na.rm = TRUE)
+}

@@ -70,44 +70,42 @@
       # call the package specific functions for image loading
       if (identical(format$package, "jpeg")) {
          capture.output(image <- readJPEG(filename, ...))
-         image
       } else if (identical(format$package, "png")) {
          capture.output(image <- readPNG(filename, ...))
-         image
       } else if (identical(format$package, "pixmap")) {
-         image <- capture.output(read.pnm(filename, ...))
+         capture.output(image <- read.pnm(filename, ...))
          if (inherits(image, "pixmapGrey")) {
-            image@grey
+            image <- image@grey
          } else if (inherits(image, "pixmapRGB")) {
-            array(c(as.vector(image@red), as.vector(image@green), as.vector(image@blue)), dim = c(image@size, 3))
+            image <- array(c(as.vector(image@red), as.vector(image@green), as.vector(image@blue)), dim = c(image@size, 3))
          }
       } else if (identical(format$package, "rtiff")) {
-         image <- capture.output(readTiff(filename, ...))
+         capture.output(image <- readTiff(filename, ...))
          if (inherits(image, "pixmapGrey")) {
-            image@grey
+            image <- image@grey
          } else if (inherits(image, "pixmapRGB")) {
-            array(c(as.vector(image@red), as.vector(image@green), as.vector(image@blue)), dim = c(image@size, 3))
+            image <- array(c(as.vector(image@red), as.vector(image@green), as.vector(image@blue)), dim = c(image@size, 3))
          }
       } else {
-         NULL
+         stop("Loading images with package '", format$package, "' is not supported")
       }
+      
+      # convert images to gray scale if desired
+      if (isTRUE(gray)) {
+         if (is.matrix(image)) {
+            # already grayscale
+         } else if (is.array(image) && dim(image)[3] == 3) {
+            image <- (image[,,1] + image[,,2] + image[,,3]) / 3
+         } else {
+            stop("Can not convert image '", filename, "' to gray scale because of unknown array dimension (", paste(dim(image), collapse = ", "), ")")
+         }
+      }
+      
+      image
    })
    
    # use the filenames of the images as names of the list
    names(images) <- filenames
-   
-   # convert images to gray scale if desired
-   if (isTRUE(gray)) {
-      images <- lapply(images, function(image) {
-         if (is.matrix(image)) {
-            image
-         } else if (is.array(image) && dim(image)[3] == 3) {
-            (image[,,1] + image[,,2] + image[,,3]) / 3
-         } else {
-            stop("Can not convert image '", filename, "' to gray scale because of unknown array dimension (", paste(dim(image), collapse = ", "), ")")
-         }
-      })
-   }
    
    # if only one image, do not return a list
    if (isFALSE(list) && length(images) == 1L) {
@@ -190,7 +188,7 @@
          }
          writeTiff(pixmap = image, fn = filename)
       } else {
-         NULL
+         stop("Saving images with package '", format$package, "' is not supported")
       }
    })
    

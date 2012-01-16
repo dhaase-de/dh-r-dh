@@ -1,3 +1,16 @@
+** Released as 0.4.1 (2011-11-08)
+    * fixed bug in function 'readImage' which caused pixmap and tiff images
+      not to be loaded correctly (wrong use of 'capture.output')
+    * fixed bug in error message of conversion to gray scale images in function
+      'readImage'
+    * updated functions 'readImage' and 'writeImage' to trigger an error if
+      none of the supported packages for loading/saving an image can be used
+    * added function 'file.extension<-' to replace the file extension of
+      filenames
+    * added function 'dirname<-' to replace the directory of filenames
+    * added function 'entropy' to calculate the entropy of a discrete
+      probability distribution
+
 ** Released as 0.4.0 (2011-11-07)
     * added package namespace
     * changed 'init' and 'step' functions for progress bar to S4 methods

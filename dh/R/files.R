@@ -22,6 +22,38 @@
    extensions
 }
 
+"file.extension<-" <- function(filenames, value) {
+   # check arguments
+   if (!is.vector(filenames) || !is.character(filenames)) {
+      stop("Target object must be a character vector")
+   }
+   if (!is.vector(value) || !is.character(value)) {
+      stop("Value must be a character vector")
+   }
+   
+   values <- rep(value, length.out = length(filenames))
+   sapply(seq(length(filenames)), function(i) {
+      filename <- filenames[i]
+      sub(paste(file.extension(filename), "$", sep = ""), values[i], filename)
+   })
+}
+
+"dirname<-" <- function(filenames, value) {
+   # check arguments
+   if (!is.vector(filenames) || !is.character(filenames)) {
+      stop("Target object must be a character vector")
+   }
+   if (!is.vector(value) || !is.character(value)) {
+      stop("Value must be a character vector")
+   }
+   
+   values <- rep(value, length.out = length(filenames))
+   sapply(seq(length(filenames)), function(i) {
+      filename <- filenames[i]
+      sub(paste("^", dirname(filename), sep = ""), values[i], filename)
+   })
+}
+
 "bytes.toHumanReadable" <- function(bytes, digits = 2, decimal = TRUE) {
    if (isTRUE(decimal)) {
       base <- 1000

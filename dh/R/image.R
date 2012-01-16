@@ -121,8 +121,8 @@
    if (!is.list(images)) {
       images <- list(images)
    }
-   if (any(sapply(images, function(image) { !is.numeric(image) || !(is.matrix(image) || is.array(image)) } ))) {
-      stop("Argument 'images' must be a numeric matrix/array or a list of such")
+   if (any(sapply(images, function(image) { !(is.numeric(image) || is.character(image)) || !(is.matrix(image) || is.array(image)) } ))) {
+      stop("Argument 'images' must be a numeric/character matrix/array or a list of such")
    }
    if (!is.vector(filenames) || !is.character(filenames) || length(filenames) != length(images)) {
       stop("Argument 'filenames' must be a character vector with a length identical to the number of images")
@@ -141,6 +141,11 @@
    sapply(seq(length(filenames)), function(filename.index) {
       image <- images[[filename.index]]
       filename <- filenames[filename.index]
+      
+      # convert raster image to array
+      if (is.matrix(image) && is.character(image)) {
+         image <- aperm(array(col2rgb(image) / 255, c(3, nrow(image), ncol(image))), c(2, 3, 1))
+      }
       
       # get file extension
       if (is.null(extensions[filename.index]) || identical(extensions[filename.index], "")) {

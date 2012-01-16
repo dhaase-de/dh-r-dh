@@ -196,6 +196,48 @@
 ## Probability
 ##
 
+# multivariate Gaussian density
+"mvdnorm" <- function(x, mean, S, S.inv) {
+   # check types
+   if (!is.vector(mean) || !is.numeric(mean)) {
+      stop("Argument 'mean' must be a numeric vector")
+   }
+   
+   # check dimensions
+   N <- length(mean)
+   
+   # get inverse covariance matrix
+   if (missing(S.inv)) {
+      if (missing(S)) {
+         stop("At least one argument of 'S' and 'S.inv' must be specified")
+      } else {
+         if (!is.matrix(S) || !is.numeric(S) || dim(S)[1] != dim(S)[2] || dim(S)[1] != N) {
+            stop("Argument 'S' must be a numeric square matrix with dimensions matching the length of argument 'mean'")
+         }
+         S.inv <- solve(S)
+      }
+   } else {
+      if (!is.matrix(S.inv) || !is.numeric(S.inv) || dim(S.inv)[1] != dim(S.inv)[2] || dim(S.inv)[1] != N) {
+         stop("Argument 'S.inv' must be a numeric square matrix with dimensions matching the length of argument 'mean'")
+      }
+   }
+   
+   # convert x to a matrix (to also handle the cases in which more than one point is given)
+   x <- as.matrix(x)
+   T <- ncol(x)
+   if (nrow(x) != N) {
+      stop("Argument 'x' must be a vector of length N or a NxT matrix (N: dimension, T: number of points to calculate the density for)")
+   }
+   x0 <- x - mean
+   
+   # values that can be precomputed
+   S.inv.negHalf <- -0.5 * S.inv
+   d.norm <- sqrt((2 * pi) ^ N * det(S.inv))
+   
+   # point densities
+   apply(x0, 2, function(z) exp(z %*% S.inv.negHalf %*% z) / d.norm)
+}
+
 "entropy" <- function(...) {
    p <- c(...)
    

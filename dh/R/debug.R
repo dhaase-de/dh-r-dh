@@ -1,3 +1,42 @@
+# creates an image of random 2d Gaussian densities
+"gaussians2d" <- function(N = 20, X = 100, Y = 100, S.factor = 1, plot = FALSE) {
+   # check if suggested package 'clusterGeneration' is installed
+   if (!is.installed("clusterGeneration")) {
+      warning("Install package 'clusterGeneration' to get better random covariance matrices")
+   } else {
+      # load package
+      if (isFALSE(suppressWarnings(library("clusterGeneration", logical.return = TRUE)))) {
+         stop("Error loading package 'clusterGeneration'")
+      }
+   }
+   
+   D <- matrix(0, nrow = Y, ncol = X)
+   
+   xs <- t(expand.grid(x = seq(X), y = seq(Y)))
+   means <- matrix(NA, nrow = 2, ncol = N)
+   Ss <- array(NA, dim = c(2, 2, N))
+   
+   for (n in seq(length = N)) {
+      means[,n] <- runif(2, min = 1, max = c(X, Y))
+      if (is.loadedPackage("clusterGeneration")) {
+         # generate random covriance matrix
+         Ss[,,n] <- genPositiveDefMat(dim = 2, covMethod = "onion", rangeVar = min(X, Y) * S.factor * c(0.5, 1))$Sigma
+      } else {
+         # create a very simple covariance matrix
+         Ss[,,n] <- diag(runif(2, min = c(X, Y) * S.factor / 2, max = c(X, Y) * S.factor))
+      }
+      
+      d <- mvdnorm(xs, means[,n], Ss[,,n])
+      D <- D + matrix(d, nrow = Y, ncol = X, byrow = TRUE)
+   }
+   
+   if (isTRUE(plot)) {
+      pm(D, col = pal$jet)
+   }
+   
+   invisible(D)
+}
+
 # list objects and their size
 "objects.sizes" <- function(environment = 1, plot = TRUE, threshold = 0.05) {
    objects <- ls(name = environment)
@@ -13,17 +52,19 @@
    invisible(sizes)
 }
 
-# test matrix
-M <- matrix(1:16, nrow = 4)
-
+# print name and value of variables
 # print name and value of variables
 "out" <- function(...) {
    "args.names" <- function(object, ...) {
-      object.name <- deparse(substitute(object))
-      if (length(list(...)) > 0L) {
-         c(object.name, args.names(...))
+      if (missing(object)) {
+         NULL
       } else {
-         object.name
+         object.name <- deparse(substitute(object))
+         if (length(list(...)) > 0L) {
+            c(object.name, args.names(...))
+         } else {
+            object.name
+         }
       }
    }
    
@@ -31,10 +72,13 @@ M <- matrix(1:16, nrow = 4)
    args <- list(...)
    names <- args.names(...)
    names.lengths <- strlen(names)
-   names.maxLength <- max(names.lengths)
+   if (!is.null(names.lengths)) {
+      names.maxLength <- max(names.lengths)
+      cat("\n")
+   }
    
    # show objects
-   for (i in seq(length(names))) {
+   for (i in seq(along.with = names)) {
       if (names.lengths[i] < names.maxLength) {
          name.sep <- " "
       } else {
@@ -43,21 +87,9 @@ M <- matrix(1:16, nrow = 4)
       cat(">>> ", fill(paste(names[i], name.sep, sep = ""), to.length = names.maxLength, with.character = ".", from.left = FALSE), " <<< ", sep = "")
       str(args[[i]], nest.lev = 1, indent.str = "      ")
    }
-}
-
-# counterpart of 'isTRUE'
-"isFALSE" <- function(...) {
-   !isTRUE(...)
-}
-
-# source file 'main.R'
-"sm" <- function(dir = getwd()) {
-   filename <- paste(dir, "/", "main.R", sep = "")
-   if (file.exists(filename)) {
-      setwd(dir)
-      source("main.R")
-   } else {
-      stop(paste("File '", filename, "' not found", sep = ""))
+   
+   if (!is.null(names.lengths)) {
+      cat("\n")
    }
 }
 
@@ -65,3 +97,6 @@ M <- matrix(1:16, nrow = 4)
 "wait" <- function() {
    readline("Press [RETURN] to continue...")
 }
+
+# test matrix
+M <- matrix(1:16, nrow = 4)

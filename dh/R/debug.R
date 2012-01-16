@@ -60,6 +60,12 @@
          NULL
       } else {
          object.name <- deparse(substitute(object))
+         
+         # deal with line breaks in object name (when object name is too long)
+         if (length(object.name) > 1L) {
+            object.name <- paste(object.name[1], "...", sep = "")
+         }
+         
          if (length(list(...)) > 0L) {
             c(object.name, args.names(...))
          } else {
@@ -91,6 +97,11 @@
    if (!is.null(names.lengths)) {
       cat("\n")
    }
+}
+
+# 'str' with maximum level 1
+"st1" <- function(...) {
+   str(..., max.level = 1L)
 }
 
 # wait for key press

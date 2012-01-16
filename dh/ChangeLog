@@ -1,3 +1,8 @@
+** Released as 0.5.2 (2012-01-16)
+    * fixed bug in function 'out' which occured if an object name was too long
+    * added function 'st1' as shortcut for 'str' with maximum level 1 (useful
+      for displaying largely nested list structures)
+
 ** Released as 0.5.1 (2011-11-30)
     * added function 'finite' which returns all finite elements of an object
     * added function 'reaload.package' to entirely reload a package (e.g. after

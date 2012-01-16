@@ -1,0 +1,5 @@
+importFrom(utils, packageDescription)
+
+exportPattern("^[^\\.]")
+exportClasses(progressBar)
+exportMethods(init, show, step)

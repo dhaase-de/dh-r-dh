@@ -2,19 +2,14 @@
 
 \alias{in.triangle}
 
-\title{Calculate Orthogonal Vectors of 2D Input Vectors}
+\title{Check if a 2D point is inside a given triangle}
 
-\description{Calculate the orthogonal and normalized vectors for one or more given two-dimensional input vectors.}
+\description{Check if a 2D point is inside a given 2D triangle.}
 
-\usage{vector.ortho2D(P)}
+\usage{in.triangle(coordinates)}
 
 \arguments{
-   \item{P}{either a N-by-2 matrix or a vector of length 2 holding the x and y coordinates of the input vectors.}
+   \item{coordinates}{a numeric vector of length 8. The first 6 elements are the x any y coordinates for the triangle (ordered xyxyxy), and the last two elements are the x and y coordinates of the point to be checked.}
 }
 
-\value{The returned object has the same dimensions as the input \code{P}. If \code{P} is a matrix, the rownames of the returned matrix are those of \code{P}. All output vectors are normalized to have a length of one.}
-
-\examples{
-vector.ortho2D(c(2,0))
-vector.ortho2D(matrix(runif(10), nrow = 5, ncol = 2))
-}
+\value{A logical value indicating if the point is inside (\code{TRUE}) or outside (\code{FALSE}) the triangle.}

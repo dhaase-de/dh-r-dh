@@ -1,14 +1,56 @@
-=== 2010-10-20 (0.1.2) ===
- * moved file 'geometry.R' to 'math.R'
- * some minor additions
+** Released as 0.4.0 (2011-11-07)
+    * added package namespace
+    * changed 'init' and 'step' functions for progress bar to S4 methods
+    * added package 'methods' in the package dependencies
+    * added wrapper function 'progressBar'
+    * added functions 'rot', 'rot2angle', 'deg2rad', 'rad2deg' for 2D rotations
+    * fixed usage of 'rasterImage' in the function 'pm', now checks if this
+      function exists and thus also works with R versions < 2.11.0
+    * added support for color palettes when using the raster drawing option in
+      the function 'pm'
+    * fixed the range calculation and scaling when using the raster drawing
+      option in the function 'pm' to also work with non-finite values
+    * added predefined color palettes (function 'palettes' and object 'pal')
+    * added example matrix (object 'M', value "matrix(seq(16), 4)")
+    * added function 'is.loadedPackage' to check whether a package is currently
+      loaded
+    * added function 'equal' to check if two values are (numerically) equal
+    * added function 'sm()' the source the file 'main.R'
+    * minor code layout improvements
+    * added file 'files.R'
+    * added function 'file.extension' which returns the extensions of filenames
+    * added file 'image.R' for image-related functions
+    * added functions 'readImage' and 'writeImage' as wrappers for image reading
+      and writing packages (supports JPEG, PNM, PNM, TIFF)
+    * added packages 'jpeg', 'png', 'pixmap' and 'rtiff' to package suggests
+    * added function 'bytes.toHumanReadable' to transform a number of bytes into
+      a human readable string
+    * replaced function 'lso' with function 'objects.sizes' to output the size
+      of R objects
+    * added function 'wait' which waits for the user to hit [RETURN]
+    * added file 'zzz.R' and startup message
+    * added package 'utils' in the dependecies (needed to obtain package
+      information using function 'packageDescription')
+    * updated function 'is.installed' to use 'system.file' instead of
+      'installed.packages' for performance reasons
 
-=== 2010-08-27 (0.1.1) ===
- * added file 'geometry.R'
+** Releases 0.1.3, 0.1.4, 0.1.5, 0.1.6
+    * added usage of 'rasterImage' in the function 'pm'
+    * added function 'indexIntervalLengths.toEndpoints'
+    * added function 'is.installed' to check if a package is installed
+    * minor fixes for progress bar (more robust use of 'Sys.getenv("COLUMNS")')
 
-=== 2010-08-25 (0.1) ===
- * added class 'progressBar'
- * added function 'sec.dhms'
- * added some other small functions
+** Released as 0.1.2 (2010-10-20)
+    * moved file 'geometry.R' to 'math.R'
+    * some minor additions
 
-=== 2010-08-20 (0.0.1) ===
- * first version
+** Released as 0.1.1 (2010-08-27)
+    * added file 'geometry.R'
+
+** Released as 0.1.0 (2010-08-25)
+    * added class 'progressBar'
+    * added function 'sec.dhms'
+    * added some other small functions
+
+** Released as 0.0.1 (2010-08-20)
+    First version.

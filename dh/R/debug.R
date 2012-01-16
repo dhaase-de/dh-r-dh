@@ -39,10 +39,48 @@
    objects.data
 }
 
+"objects.sizes" <- function(environment = 1, plot = TRUE, threshold = 0.05) {
+   objects <- ls(name = environment)
+   sizes <- sapply(objects, function(object.name) unclass(object.size(get(object.name))))
+   
+   if (isTRUE(plot)) {
+      sizes.relative <- sizes / sum(sizes)
+      sizes.plot <- c(sizes[sizes.relative >= threshold], sum(sizes[sizes.relative < threshold]))
+      labels.plot <- c(objects[sizes.relative >= threshold], paste("(", sum(sizes.relative < threshold), " object(s) < ", threshold * 100, "%)", sep = ""))
+      pie(sizes.plot, paste(labels.plot, " (", bytes.toHumanReadable(sizes.plot), ")", sep = ""), main = "Object Sizes", sub = paste("Total: ", length(objects), " object(s), ", bytes.toHumanReadable(sum(sizes)), sep = ""))
+   }
+   
+   invisible(sizes)
+}
+
+# test matrix
+M <- matrix(1:16, nrow = 4)
+
 # print name and value of variables
 "out" <- function(object, ...) {
    cat(deparse(substitute(object)), " = ", object, "\n", sep = "")
    if (length(list(...)) > 0L) {
       out(...)
    }
+}
+
+# counterpart of 'isTRUE'
+"isFALSE" <- function(...) {
+   !isTRUE(...)
+}
+
+# source file 'main.R'
+"sm" <- function(dir = getwd()) {
+   filename <- paste(dir, "/", "main.R", sep = "")
+   if (file.exists(filename)) {
+      setwd(dir)
+      source("main.R")
+   } else {
+      stop(paste("File '", filename, "' not found", sep = ""))
+   }
+}
+
+# wait for key press
+"wait" <- function() {
+   readline("Press [RETURN] to continue...")
 }

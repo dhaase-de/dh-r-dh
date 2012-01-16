@@ -1,3 +1,7 @@
+** Released as 0.4.2 (2011-11-09)
+    * added function 'kurtosis' for the calculation of the kurtosis of discrete
+      probability distributions
+
 ** Released as 0.4.1 (2011-11-08)
     * fixed bug in function 'readImage' which caused pixmap and tiff images
       not to be loaded correctly (wrong use of 'capture.output')

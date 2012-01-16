@@ -210,3 +210,7 @@
    # definition of entropy
    sum(-p * log2(p), na.rm = TRUE)
 }
+
+"kurtosis" <- function(x, excess = FALSE, ...) {
+   mean((x - mean(x))^4) / sd(x)^4 - isTRUE(excess) * 3
+}

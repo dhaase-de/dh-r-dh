@@ -1,3 +1,7 @@
+** Released as 0.5.3 (2012-01-16)
+    * renamed function 'st1' to 'st'
+    * updated functions 'st' and 'out' to better deal with output of large lists
+
 ** Released as 0.5.2 (2012-01-16)
     * fixed bug in function 'out' which occured if an object name was too long
     * added function 'st1' as shortcut for 'str' with maximum level 1 (useful

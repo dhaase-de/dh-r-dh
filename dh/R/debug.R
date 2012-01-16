@@ -91,7 +91,7 @@
          name.sep <- ""
       }
       cat(">>> ", fill(paste(names[i], name.sep, sep = ""), to.length = names.maxLength, with.character = ".", from.left = FALSE), " <<< ", sep = "")
-      str(args[[i]], nest.lev = 1, indent.str = "      ")
+      str(args[[i]], nest.lev = 1, indent.str = "      ", give.attr = FALSE, max.level = 4L, list.len = 10L, digits.d = getOption("digits"))
    }
    
    if (!is.null(names.lengths)) {
@@ -99,9 +99,9 @@
    }
 }
 
-# 'str' with maximum level 1
-"st1" <- function(...) {
-   str(..., max.level = 1L)
+# short 'str' - maximum level 2 and at most 5 lists per level
+"st" <- function(...) {
+   str(..., give.attr = FALSE, max.level = 2L, list.len = 5L, digits.d = getOption("digits"))
 }
 
 # wait for key press

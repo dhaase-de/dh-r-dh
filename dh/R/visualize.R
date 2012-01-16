@@ -81,3 +81,20 @@ pal <- palettes(256)
    }
 }
 
+# create color from R object
+"colorhash" <- function(x, alpha = FALSE) {
+   # check if necessary package 'digest' is installed and load it
+   if (!is.installed("digest")) {
+      stop("To use this function, package 'digest' must be installed")
+   }
+   if (isFALSE(suppressWarnings(library("digest", character.only = TRUE, logical.return = TRUE)))) {
+      stop("Error loading package 'digest'")
+   }
+   
+   x.md5 <- as.integer(digest(x, algo = "md5", raw = TRUE))
+   if (isTRUE(alpha)) {
+      rgb(red = sum(x.md5[1:4]) %% 255, green = sum(x.md5[5:8]) %% 255, blue = sum(x.md5[9:12]) %% 255, alpha = sum(x.md5[13:16]) %% 255, maxColorValue = 255)
+   } else {
+      rgb(red = sum(x.md5[1:4]) %% 255, green = sum(x.md5[5:8]) %% 255, blue = sum(x.md5[9:12]) %% 255, maxColorValue = 255)
+   }
+}

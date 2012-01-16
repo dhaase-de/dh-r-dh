@@ -1,0 +1,10 @@
+Package: dh
+Type: Package
+Title: Toolbox of Daniel Haase
+Version: 0.1.2
+Date: 2010-10-20
+Author: Daniel Haase <dh@haase-zm.de>
+Maintainer: Daniel Haase <dh@haase-zm.de>
+Description: Toolbox of Daniel Haase
+License: GPL (>= 2)
+Packaged: 2011-07-12 11:22:36 UTC; haase

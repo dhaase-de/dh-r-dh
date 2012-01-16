@@ -1,0 +1,14 @@
+=== 2010-10-20 (0.1.2) ===
+ * moved file 'geometry.R' to 'math.R'
+ * some minor additions
+
+=== 2010-08-27 (0.1.1) ===
+ * added file 'geometry.R'
+
+=== 2010-08-25 (0.1) ===
+ * added class 'progressBar'
+ * added function 'sec.dhms'
+ * added some other small functions
+
+=== 2010-08-20 (0.0.1) ===
+ * first version

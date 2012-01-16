@@ -1,3 +1,8 @@
+** Released as 0.5.1 (2011-11-30)
+    * added function 'finite' which returns all finite elements of an object
+    * added function 'reaload.package' to entirely reload a package (e.g. after
+      re-installing a package)
+
 ** Released as 0.5.0 (2011-11-29)
     * rewrote and reorganized the functions for image display and colorization,
       'pm(X)' is now a wrapper for 'pr(colorize(X))', 'pr' is a function for

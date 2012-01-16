@@ -19,3 +19,11 @@
    suggests <- unique(unlist(lapply(packages, function(package) strsplit(utils::packageDescription(package)$Suggests, "\\s*,\\s*"))))
    install.packages(pkgs = suggests, ...)
 }
+
+"reload.package" <- function(packages) {
+   lapply(packages, function(package) {
+      detach(paste("package:", package, sep = ""), unload = TRUE, character.only = TRUE)
+      library(package, character.only = TRUE)
+   })
+   invisible(NULL)
+}

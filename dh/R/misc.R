@@ -18,3 +18,8 @@
 "along" <- function(along.with) {
    seq_along(along.with = along.with)
 }
+
+# all finite elements
+"finite" <- function(x) {
+   x[is.finite(x)]
+}

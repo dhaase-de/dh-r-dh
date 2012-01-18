@@ -1,12 +1,11 @@
 Package: dh
 Type: Package
 Title: Toolbox of Daniel Haase
-Version: 0.5.3
-Date: 2012-01-16
+Version: 0.5.4
+Date: 2012-01-18
 Author: Daniel Haase <dh@haase-zm.de>
 Maintainer: Daniel Haase <dh@haase-zm.de>
 Description: Toolbox of Daniel Haase
 Depends: methods, utils
 Suggests: clusterGeneration, digest, jpeg, png, pixmap, rtiff
 License: GPL (>= 2)
-Packaged: 2011-11-30 11:46:42 UTC; haase

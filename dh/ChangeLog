@@ -1,3 +1,7 @@
+** Released as 0.5.4 (2012-01-18)
+    * added function 'scurve' which plots a curve of a function and shades parts
+      of the area under the curve
+
 ** Released as 0.5.3 (2012-01-16)
     * renamed function 'st1' to 'st'
     * updated functions 'st' and 'out' to better deal with output of large lists

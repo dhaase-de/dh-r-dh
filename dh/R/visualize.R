@@ -136,3 +136,17 @@ pal <- palettes(256)
       rgb(red = sum(x.md5[1:4]) %% 255, green = sum(x.md5[5:8]) %% 255, blue = sum(x.md5[9:12]) %% 255, maxColorValue = 255)
    }
 }
+
+# plot partially shaded curve of a function
+"scurve" <- function(f, from = -3, to = 3, from.shade = 0, to.shade = 0, N = 101, density = 10, border = NA, col.curve = 1, col.shade = 1, args.curve = list(), args.shade = list(), ...) {
+   args.f = list(...)
+   g <- function(z) {
+      do.call(f, c(list(z), args.f))
+   }
+   xs <- seq(from = from.shade, to = to.shade, length.out = N)
+   ys <- g(xs)
+   do.call(curve, c(list(expr = parse(text = "g")[[1]], from = from, to = to, col = col.curve), args.curve))
+   if (!equal(from.shade, to.shade)) {
+      do.call(polygon, c(list(x = c(xs[1], xs, xs[N]), y = c(0, ys, 0), density = density, col = col.shade, border = border), args.shade))
+   }
+}

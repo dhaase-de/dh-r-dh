@@ -1,9 +1,13 @@
 # source file 'main.R'
-"sm" <- function(dir = getwd()) {
+"sm" <- function(dir = getwd(), return = FALSE) {
    filename <- paste(dir, "/", "main.R", sep = "")
    if (file.exists(filename)) {
+      oldwd <- getwd()
       setwd(dir)
       source("main.R")
+      if (isTRUE(return)) {
+         setwd(oldwd)
+      }
    } else {
       stop(paste("File '", filename, "' not found", sep = ""))
    }

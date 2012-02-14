@@ -1,3 +1,9 @@
+** Released as 0.5.5 (2012-02-14)
+    * added parameter 'return' for function 'sm' which causes the working
+      directory to be set to the old value after changing to the specified
+      directory and including the file 'main.R' ('return' is 'FALSE' by default,
+      so the standard behavior is identical to previous versions)
+
 ** Released as 0.5.4 (2012-01-18)
     * added function 'scurve' which plots a curve of a function and shades parts
       of the area under the curve

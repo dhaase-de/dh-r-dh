@@ -38,6 +38,11 @@
    })
 }
 
+# returns TRUE iff file exists and it is a directory
+"is.directory" <- function(...) {
+   sapply(file.info(...)$isdir, isTRUE)
+}
+
 "dirname<-" <- function(filenames, value) {
    # check arguments
    if (!is.vector(filenames) || !is.character(filenames)) {

@@ -1,8 +1,10 @@
 ** Released as 0.6.0 (2012-02-15)
     * added function 'minRequiredVersion' to ensure a certain version of this
       package is used
-    * added function 'clip' to clip values of objects to a certain range
+    * added function 'is.directory' to check if a file exists and if it is a
+      directory
     * added function 'paste0' as wrapper for 'paste' with 'sep=""'
+    * added function 'clip' to clip values of objects to a certain range
 
 ** Released as 0.5.5 (2012-02-14)
     * added parameter 'return' for function 'sm' which causes the working

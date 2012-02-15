@@ -27,3 +27,10 @@
 "finite" <- function(x) {
    x[is.finite(x)]
 }
+
+# clip values outside of a certain range
+"clip" <- function(x, low = 0, high = 1) {
+   x[x < low] <- low
+   x[x > high] <- high
+   x
+}

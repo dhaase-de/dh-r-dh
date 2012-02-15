@@ -24,6 +24,11 @@
    v.fill
 }
 
+# 'paste' with 'sep = ""'
+"paste0" <- function(...) {
+   paste(..., sep = "")
+}
+
 # return the first characters of strings (vectorized)
 "strfirst" <- function(v, characters = 1) {
    substr(v, 1, characters)

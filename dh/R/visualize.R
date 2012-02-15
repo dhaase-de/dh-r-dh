@@ -150,3 +150,4 @@ pal <- palettes(256)
       do.call(polygon, c(list(x = c(xs[1], xs, xs[N]), y = c(0, ys, 0), density = density, col = col.shade, border = border), args.shade))
    }
 }
+

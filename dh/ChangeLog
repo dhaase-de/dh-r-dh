@@ -1,3 +1,9 @@
+** Released as 0.6.0 (2012-02-15)
+    * added function 'minRequiredVersion' to ensure a certain version of this
+      package is used
+    * added function 'clip' to clip values of objects to a certain range
+    * added function 'paste0' as wrapper for 'paste' with 'sep=""'
+
 ** Released as 0.5.5 (2012-02-14)
     * added parameter 'return' for function 'sm' which causes the working
       directory to be set to the old value after changing to the specified

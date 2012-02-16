@@ -40,7 +40,9 @@
 
 # returns TRUE iff file exists and it is a directory
 "is.directory" <- function(...) {
-   sapply(file.info(...)$isdir, isTRUE)
+   args <- list(...)
+   args <- lapply(args, as.character)
+   unlist(lapply(do.call(file.info, args)$isdir, isTRUE))
 }
 
 "dirname<-" <- function(filenames, value) {

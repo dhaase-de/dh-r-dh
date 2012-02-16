@@ -1,3 +1,7 @@
+** Released as 0.6.1 (2012-02-16)
+    * updated function 'is.directory' to be more robust concerning its inputs
+      (e.g. 'is.directory(NULL)' now returns 'NULL', as expected)
+
 ** Released as 0.6.0 (2012-02-15)
     * added function 'minRequiredVersion' to ensure a certain version of this
       package is used

@@ -1,3 +1,7 @@
+** Released as 0.6.2 (2012-02-17)
+    * added function 'match.args' which behaves similar to 'match.arg' with
+      'several.ok=TRUE' but with some more security checks/features
+
 ** Released as 0.6.1 (2012-02-16)
     * updated function 'is.directory' to be more robust concerning its inputs
       (e.g. 'is.directory(NULL)' now returns 'NULL', as expected)

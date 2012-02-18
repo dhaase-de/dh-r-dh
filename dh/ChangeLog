@@ -1,3 +1,10 @@
+** Released as 0.6.3 (2012-02-18)
+    * changed package startup message to only appear for interactive sessions
+    * changed last parameter name of function 'minRequiredVersion' from 'fix'
+      to 'patch', removed constraint of checked version to be at least 0.6.0
+      and set all three default parameter values to '0L' (this allows easier
+      checks for main and subversions, e.g. 'minRequiredVersion(1)')
+
 ** Released as 0.6.2 (2012-02-17)
     * added function 'match.args' which behaves similar to 'match.arg' with
       'several.ok=TRUE' but with some more security checks/features

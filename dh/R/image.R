@@ -19,6 +19,7 @@
 
 "readImage" <- function(filenames, gray = FALSE, extensions = NULL, list = FALSE, ...) {
    # check arguments
+   filenames.original <- filenames
    filenames.glob <- Sys.glob(filenames)
    if (length(extensions) > 1L && (length(filenames.glob) != length(filenames))) {
       stop("If filename globbing is used, argument 'extensions' must be NULL or a character vector of length one")
@@ -32,13 +33,13 @@
    # recycle 'extensions'
    extensions <- rep(extensions, len = length(filenames))
    
-   # check if files exist
-   if (any(invalid <- !sapply(filenames, file.exists))) {
-      stop("The file(s) '", paste(filenames[invalid], collapse = "', '"), "' can not be found")
+   # check if at least one file is left (non-existing filenames are removed during globbing)
+   if (length(filenames) == 0L) {
+      stop("No image file was found for filenames '", paste(filenames.original, collapse = "', '"), "'")
    }
    
    # load images
-   images <- lapply(seq(length(filenames)), function(filename.index) {
+   images <- lapply(along(filenames), function(filename.index) {
       filename <- filenames[filename.index]
       
       # get file extension

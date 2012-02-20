@@ -1,3 +1,7 @@
+** Released as 0.6.4 (2012-02-20)
+    * fixed bug in function 'readImage', now an error is triggered if no image
+      file was found for a given 'filename' argument
+
 ** Released as 0.6.3 (2012-02-18)
     * changed package startup message to only appear for interactive sessions
     * changed last parameter name of function 'minRequiredVersion' from 'fix'

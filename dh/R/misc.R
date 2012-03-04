@@ -14,8 +14,8 @@
 }
 
 # counterpart of 'isTRUE'
-"isFALSE" <- function(...) {
-   !isTRUE(...)
+"isFALSE" <- function(x) {
+   !isTRUE(x)
 }
 
 # wrapper for 'match.arg' which behaves similar to 'several.ok=TRUE' but with some more security checks

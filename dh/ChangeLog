@@ -1,3 +1,12 @@
+** To be released as 0.6.5 (2012-03-??)
+    * updated argument of function 'isFALSE' to match the format of 'isTRUE'
+    * added dummy manual file '.empty.Rd' which can be used for new code object
+      documentations
+    * added documentation entry 'Undocumented' which includes all undocumented
+      code objects
+    * changed naming convention of documentation files
+    * added documentation for some code objects
+
 ** Released as 0.6.4 (2012-02-20)
     * fixed bug in function 'readImage', now an error is triggered if no image
       file was found for a given 'filename' argument

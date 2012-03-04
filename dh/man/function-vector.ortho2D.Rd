@@ -15,6 +15,6 @@
 \value{The returned object has the same dimensions as the input \code{P}. If \code{P} is a matrix, the rownames of the returned matrix are those of \code{P}. All output vectors are normalized to have a length of one.}
 
 \examples{
-vector.ortho2D(c(2,0))
-vector.ortho2D(matrix(runif(10), nrow = 5, ncol = 2))
+   vector.ortho2D(c(2,0))
+   vector.ortho2D(matrix(runif(10), nrow = 5, ncol = 2))
 }

@@ -12,7 +12,7 @@
    
    # check if 'x' will be partially recycled
    x.length <- length(x)
-   if (!identical(length.out / x.length, length.out %/% x.length)) {
+   if (!equal(length.out / x.length, length.out %/% x.length)) {
       warning("Output length is not an integer multiple of the input vector length")
    }
    

@@ -256,3 +256,62 @@
 "kurtosis" <- function(x, excess = FALSE, ...) {
    mean((x - mean(x))^4) / sd(x)^4 - isTRUE(excess) * 3
 }
+
+##
+## Numerics
+##
+
+# parallel version of 'numDeriv::jacobian'
+"pjacobian" <- function(func, x, method = "Richardson", method.args = list(), cores = parallel::detectCores(), ...) {
+   # necessary packages
+   library(parallel)
+   library(numDeriv)
+   
+   # dimension of input vector
+   if (!is.vector(x)) {
+      stop("Argument 'x' must be a vector")
+   }
+   N <- length(x)
+   
+   # number of cores to be used
+   if (!is.vector(cores) || length(cores) != 1 || !is.numeric(cores) || !is.finite(cores) || cores < 1) {
+      stop("Argument 'cores' must be a finite numeric >= 1")
+   }
+   cores <- as.integer(min(cores, N))
+   
+   # divide input vector indices on available cores
+   cores.indices <- round(seq(cores) * N / as.integer(cores))
+   cores.indices <- lapply(seq(cores), function(core) {
+      if (core == 1) {
+         c(1, cores.indices[1])
+      } else {
+         c(cores.indices[core - 1] + 1, cores.indices[core])
+      }
+   })
+   
+   # function wrapper which reassembles the full-length input vector of function 'func'
+   func.wrapper <- function(x.core, indices) {
+      x.func <- x
+      x.func[indices] <- x.core
+      func(x.func, ...)
+   }
+   
+   # calculate jacobians for all parts of the input vector in parallel
+   suppressWarnings(cores.jacobians <- parallel::mclapply(cores.indices, function(core.indices) {
+         core.indexSeq <- seq(from = core.indices[1], to = core.indices[2], by = 1)
+         numDeriv::jacobian(func = func.wrapper, x = x[core.indexSeq], method = method, method.args = method.args, indices = core.indexSeq)
+      },
+      mc.preschedule = FALSE,
+      mc.cores = cores
+   ))
+   
+   # check if error(s) occurred
+   lapply(cores.jacobians, function(core.jacobian) {
+      if (inherits(core.jacobian, "try-error")) {
+         stop(core.jacobian, call. = FALSE)
+      }
+   })
+   
+   # merge jacobians of each core column-wise
+   do.call(cbind, cores.jacobians)
+}

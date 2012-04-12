@@ -1,6 +1,7 @@
 ===== Released as 0.6.6 (2012-04-10) =====
 * added function 'pjacobian' which is a parallel version of 'numDeriv::jacobian'
 * added package 'numDeriv' to suggested packages
+* added debug function 'pst' which is a shortcut for 'print(system.time(...))'
 
 ===== Released as 0.6.5 (2012-03-23) =====
 * added function 'recycle' for the safe recycling of a vector

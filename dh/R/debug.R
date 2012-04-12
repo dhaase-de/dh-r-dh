@@ -104,6 +104,27 @@
    str(..., give.attr = FALSE, max.level = 2L, list.len = 5L, digits.d = getOption("digits"))
 }
 
+# shortcut for "print(system.time(...))"
+"pst" <- function(expr) {
+   # get elapsed time
+   elapsed <- round(system.time(expr = expr, gcFirst = TRUE)["elapsed"] * 1000)
+   elapsed.text <- paste("Elapsed time: ", elapsed, "ms", sep = "")
+   
+   # convert expression to text
+   expr.character <- deparse(substitute(expr))
+   if (length(expr.character) > 1L) {
+      expr.character <- paste(expr.character[1], "...", sep = "")
+   }
+   expr.text <- paste("Expression:   ", expr.character, sep = "")
+   
+   # seperator text
+   sep.length <- max(strlen(elapsed.text), strlen(expr.text))
+   sep.text <- paste(rep("-", sep.length), collapse = "")
+   
+   # print all information
+   cat(sep.text, expr.text, elapsed.text, sep.text, sep = "\n")
+}
+
 # wait for key press
 "wait" <- function() {
    readline("Press [RETURN] to continue...")

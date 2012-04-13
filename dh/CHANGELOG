@@ -1,3 +1,7 @@
+===== Released as 0.6.7 (2012-04-13) =====
+* added functions 'sv' and 'ld' for saving/loading R objects to/from files of
+  the same name
+
 ===== Released as 0.6.6 (2012-04-10) =====
 * added function 'pjacobian' which is a parallel version of 'numDeriv::jacobian'
 * added package 'numDeriv' to suggested packages

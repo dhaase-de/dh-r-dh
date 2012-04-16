@@ -35,3 +35,31 @@
       matrix(c(from, to), ncol = 2, byrow = FALSE, dimnames = list(seq(N), c("from", "to")))
    }
 }
+
+# return a (sorted) subset of a numeric vector 'v' which has a length of 'length.out' and whose elements are as equidistant as possible
+"equidistantSubset" <- function(v, length.out) {
+   # sort vector v
+   v <- sort(v)
+   N <- length(v)
+   
+   # if output length is not smaller than the input length, do nothing
+   if (length.out >= N) {
+      return(v)
+   }
+   
+   # ideal ouput vector (equidistant values between min and max)
+   v.ideal <- seq(from = v[1], to = v[N], length.out = length.out)
+   v.selected <- rep(FALSE, N)
+   
+   # repeatedly select next best element
+   while (sum(v.selected) < length.out) {
+      dists <- outer(v[!v.selected], v.ideal, function(a, b) abs(a - b))
+      dists.min <- which(dists == min(dists), arr.ind = TRUE)[1,]
+      
+      v.selected[!v.selected][dists.min[1]] <- TRUE
+      v.ideal <- v.ideal[-dists.min[2]]
+   }
+   
+   # return vector of desired length
+   v[v.selected]
+}

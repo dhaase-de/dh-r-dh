@@ -1,3 +1,4 @@
+source("benchmark.R")
 source("debug.R")
 source("files.R")
 source("image.R")

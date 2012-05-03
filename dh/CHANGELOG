@@ -1,3 +1,7 @@
+===== Released as 0.6.9 (2012-05-03) =====
+* added benchmark functions 'benchmark.sanity' and 'benchmark.matrix' to check
+  the performances of various systems
+
 ===== Released as 0.6.8 (2012-04-16) =====
 * added function 'equidistantSubset'
 

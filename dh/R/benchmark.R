@@ -36,7 +36,7 @@
    }
 }
 
-"benchmark.matrix" <- function(Ns = c(10, 50, 100, 500, 1000), operations = c("mul", "solve", "chol", "qr", "eigen", "svd"), T = 100, seed = 17041985) {
+"benchmark.matrix" <- function(Ns = c(10, 50, 100, 500, 1000), operations = c("mul", "solve", "chol", "qr", "eigen", "svd"), T = 5, seed = 17041985) {
    # set seed
    set.seed(seed = seed)
    

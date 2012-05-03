@@ -7,5 +7,5 @@ Author: Daniel Haase <dh@haase-zm.de>
 Maintainer: Daniel Haase <dh@haase-zm.de>
 Description: Toolbox of Daniel Haase
 Depends: methods, utils
-Suggests: clusterGeneration, digest, jpeg, numDeriv, png, pixmap, rtiff
+Suggests: clusterGeneration, digest, jpeg, Matrix, numDeriv, png, pixmap, rtiff
 License: GPL (>= 2)

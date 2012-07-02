@@ -22,6 +22,16 @@
    isTRUE(all.equal(x, y))
 }
 
+# running median
+"rmedian" <- function(x, radius = 3) {
+   xx <- c(rep(NA, radius), x, rep(NA, radius))
+   r <- rep(NA, length(xx))
+   for (i in seq(from = radius + 1, to = length(xx) - radius)) {
+      r[i] <-  median(xx[i + seq(from = -radius, to = radius)], na.rm = TRUE)
+   }
+   r[seq(from = radius + 1, to = length(xx) - radius)]
+}
+
 ##
 ## Geometry
 ##

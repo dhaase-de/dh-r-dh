@@ -1,18 +1,20 @@
 ##
-## class 'kf'
+## class 'kalman'
 ##
 
 setClass(
-   "kf",
+   "kalman",
    
    representation = representation(
-      x = "numeric",            # state vector
-      P = "matrix",             # state covariance
-      F = "matrix",             # transition matrix
-      H = "matrix",             # 
-      Q = "matrix",             # process noise
-      R = "matrix",             # measurement noise
-      step = "character"        # 
+      x                 = "numeric",    # state vector
+      P                 = "matrix",     # state covariance
+      F                 = "matrix",     # transition matrix
+      H                 = "matrix",     # observation matrix
+      Q                 = "matrix",     # process noise
+      R                 = "matrix",     # measurement noise
+      step              = "character",  # 
+      stateNames        = "character",  # 
+      observationNames  = "character"   # 
    ),
    
    prototype = prototype(
@@ -20,23 +22,67 @@ setClass(
    )
 )
 
-"kf" <- function(...) {
-   new("kf", ...)
+"kalman.new" <- function(...) {
+   new("kalman", ...)
 }
 
-"kf.predict" <- function(kf) {
+# create a Kalman filter
+"kalman.xva" <- function(N = 1) {
+   # N observations, 3 * N state variables (x, speed, acceleration)
+   M <- 3 * N
+   
+   E <- diag(N)
+   Z <- matrix(0, nrow = N, ncol = N)
+   
+   # Kalman parameters
+   x <- rep(0, M)
+   P <- diag(M)
+   F <- rbind(cbind(E, E, Z), cbind(Z, E, E), cbind(Z, Z, E))
+   H <- diag(nrow = N, ncol = M)
+   Q <- diag(M)
+   R <- diag(N)
+   
+   # names of the matrices
+   stateNames <- paste0(rep(c("x", "v", "a"), each = N), seq(from = 1, to = N, by = 1))
+   observationNames <- paste0("z", seq(from = 1, to = N, by = 1))
+   
+   kalman.new(
+      x = x,
+      P = P,
+      F = F,
+      H = H,
+      Q = Q,
+      R = R,
+      stateNames = stateNames,
+      observationNames = observationNames
+   )
+}
+
+"kalman.predict" <- function(kf) {
    kf@x <- as.vector(kf@F %*% kf@x)
    kf@P <- kf@F %*% kf@P %*% t(kf@F) + kf@Q
    kf@step <- "-"
    kf
 }
 
-"kf.correct" <- function(kf, z) {
+"kalman.correct" <- function(kf, z) {
    K <- kf@P %*% t(kf@H) %*% solve(kf@H %*% kf@P %*% t(kf@H) + kf@R)
    kf@x <- as.vector(kf@x + K %*% as.matrix(z - kf@H %*% kf@x))
    kf@P <- (diag(nrow = nrow(K), ncol = ncol(kf@H)) - K %*% kf@H) %*% kf@P
    kf@step <- "+"
    kf
+}
+
+"kalman.state" <- function(kf) {
+   x <- kf@x
+   names(x) <- kf@stateNames
+   x
+}
+
+"kalman.observation" <- function(kf) {
+   z <- as.vector(kf@H %*% kf@x)
+   names(z) <- kf@observationNames
+   z
 }
 
 ##

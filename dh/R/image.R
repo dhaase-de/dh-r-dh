@@ -200,3 +200,21 @@
    
    invisible(NULL)
 }
+
+# calculate the (weighted) centroid of an image
+"centroid" <- function(X, relative = FALSE) {
+   xSum <- c(0, 0)
+   for (row in seq(nrow(X))) {
+      for (col in seq(ncol(X))) {
+         xSum <- xSum + X[row, col] * c(row, col)
+      }
+   }
+   mu <- xSum / sum(X)
+   
+   if (isTRUE(relative)) {
+      mu[1] <- interval.transform(mu[1], c(1, nrow(X)), c(0, 1))
+      mu[2] <- interval.transform(mu[2], c(1, ncol(X)), c(0, 1))
+   }
+   
+   mu
+}

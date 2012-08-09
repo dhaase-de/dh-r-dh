@@ -1,8 +1,8 @@
 Package: dh
 Type: Package
 Title: Toolbox of Daniel Haase
-Version: 0.7.0
-Date: 2012-07-06
+Version: 0.7.1
+Date: 2012-08-09
 Author: Daniel Haase <dh@haase-zm.de>
 Maintainer: Daniel Haase <dh@haase-zm.de>
 Description: Toolbox of Daniel Haase

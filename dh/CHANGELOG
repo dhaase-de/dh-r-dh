@@ -1,3 +1,8 @@
+===== Released as 0.7.1 (2012-09-11) =====
+* finished first working version of Kalman filter
+* added function 'centroid' which computes the (weighted) centroid of an image
+* added function "rgaussian" for running Gaussian smoothing
+
 ===== Released as 0.7.0 (2012-07-06) =====
 * added Kalman-filter related code (including a very simple own implementation)
 * added function 'rmedian' which calculates the running median

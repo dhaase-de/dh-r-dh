@@ -22,6 +22,14 @@
    isTRUE(all.equal(x, y))
 }
 
+# running Gaussian
+"rgaussian" <- function(x, radius = 11) {
+   L <- radius
+   G <- dnorm(seq(from = -2, to = 2, len = L))
+   G <- G / sum(G)
+   filter(x, G, method = "convolution", sides = 2, circular = TRUE)
+}
+
 # running median
 "rmedian" <- function(x, radius = 3) {
    xx <- c(rep(NA, radius), x, rep(NA, radius))

@@ -63,3 +63,47 @@
    # return vector of desired length
    v[v.selected]
 }
+
+##
+## set operations
+##
+
+# version of 'union' with arbitrary number of arguments
+"munion" <- function(...) {
+   args <- list(...)
+   N <- length(args)
+   
+   # return values
+   if (N == 0L) {
+      result <- NULL
+   } else {
+      result <- args[[1]]
+      if (N >= 2L) {
+         for (n in seq(from = 2, to = N, by = 1)) {
+            result <- union(result, args[[n]])
+         }
+      }
+   }
+   
+   result
+}
+
+# version of 'intersect' with arbitrary number of arguments
+"mintersect" <- function(...) {
+   args <- list(...)
+   N <- length(args)
+   
+   # return values
+   if (N == 0L) {
+      result <- NULL
+   } else {
+      result <- args[[1]]
+      if (N >= 2L) {
+         for (n in seq(from = 2, to = N, by = 1)) {
+            result <- intersect(result, args[[n]])
+         }
+      }
+   }
+   
+   result
+}

@@ -165,3 +165,123 @@
    
    invisible(NULL)
 }
+
+# count DBLP entries for a given query
+"dblp.count" <- function(queries = character(0)) {
+   library(XML)
+   
+   # run DBLP query and parse returned XML document
+   counts <- sapply(queries, function(query) {
+      xml <- XML::xmlParse(
+         file =  paste0(
+            "http://dblp.org/search/api/",      # base URL
+            "?q=", query,                       # query string
+            "&h=0&c=0&f=0&format=xml"           # retrieve only result count (as XML)
+         ),
+         isURL = TRUE,
+         getDTD = FALSE
+      )
+   
+      # extract result count
+      as.numeric(XML::xmlAttrs(XML::xmlRoot(xml)[["hits"]])["total"])
+   })
+   names(counts) <- queries
+   
+   counts
+}
+
+# count DBLP entries of a search string for each year
+"dblp.countByYear" <- function(query = "", years = 1990:2013, do.plot = FALSE, ...) {
+   queries <- paste0("ce:year:", years, ":* ", query)
+   counts <- dblp.count(queries = queries)
+   names(counts) <- years
+   
+   if (isTRUE(do.plot)) {
+      dblp.countByYear.plot(counts.list = counts, ...)
+   }
+   
+   counts
+}
+
+# plot several DBLP-by-year count results
+"dblp.countByYear.plot" <- function(counts.list = list(), colors = numeric(0), normalization = "none") {
+   # check argument 'counts.list'
+   if (!is.list(counts.list)) {
+      counts.list <- list(counts.list)
+   }
+   if (is.null(names(counts.list))) {
+      names(counts.list) <- seq(length(counts.list))
+   }
+   
+   if (length(colors) == 0L) {
+      colors <- seq(length(counts.list)) + 1
+   }
+   
+   # check argument 'normalization'
+   normalization <- match.arg(normalization, c("none", "max", "sum"))
+   
+   # plot delta x (in years, smaller values produce smoother curves)
+   x.subUnits <- 10
+   x.gaussRadius <- 45
+   
+   # plot range
+   x.int <- seq(from = min(sapply(counts.list, function(l) as.numeric(names(l)))), to = max(sapply(counts.list, function(l) as.numeric(names(l)))) + 1, by = 1) - 0.5
+   x.sub <- seq(from = min(x.int), to = max(x.int), by = 1 / x.subUnits)
+   
+   # label positions
+   x.at <- ceiling(x.int[-length(x.int)])
+   
+   # normalize counts
+   counts.list <- lapply(counts.list, function(l) {
+      if (normalization == "none") {
+         l
+      } else if (normalization == "max") {
+         l / max(l)
+      } else if (normalization == "sum") {
+         l / sum(l)
+      }
+   })
+   y.max <- max(as.numeric(unlist(counts.list)))
+   
+   # get label of y axis (depends on normnalization method)
+   if (normalization == "none") {
+      ylab <- "Count"
+   } else if (normalization == "max") {
+      ylab <- "Relative Count"
+   } else if (normalization == "sum") {
+      ylab <- "Density"
+   }
+   
+   # plot base graph
+   plot(x = x.int, y = NULL, xlim = range(x.int), ylim = c(0, y.max), xlab = "Year", ylab = ylab, main = "Publications by Year", xaxt = "n")
+   grid(nx = NA, ny = NULL, lwd = 1, lty = 2, col = "gray")
+   abline(v = x.at, lwd = 1, lty = 2, col = "gray")
+   axis(1, at = x.at, labels = x.at)
+   
+   # plot year counts
+   color.index <- 1
+   lapply(counts.list, function(l) {
+      lines(x = x.int, y = c(l, NA), t = "s", col = colors[color.index], lwd = 2, lty = 2)
+      y <- rep(l, each = x.subUnits)
+      
+      # smooth line
+      y <- c(rep(y[1], x.gaussRadius), y, rep(y[length(y)], x.gaussRadius))
+      y <- dh::rgaussian(y, radius = x.gaussRadius)
+      y <- y[seq(x.gaussRadius + 1, length(y) - x.gaussRadius)]
+      lines(x = x.sub[-length(x.sub)], y = y, type = "l", col = colors[color.index], lwd = 4)
+      
+      # next color
+      color.index <<- color.index + 1
+   })
+   
+   # draw legend
+   legend(
+      x = "topleft",
+      legend = names(counts.list),
+      col = colors,
+      lty = 1,
+      lwd = 4,
+      bg = "white"
+   )
+}
+

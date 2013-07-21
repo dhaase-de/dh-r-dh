@@ -166,17 +166,45 @@
    invisible(NULL)
 }
 
+##
+## DBLP query functions
+##
+
+# turn phrase into query string
+"dblp.phraseToQueryString" <- function(phrase, year = NA) {
+   query <- tolower(phrase)
+   
+   # remove leading and trailing white space
+   query <- gsub("(^\\s+|\\s+$)", "", query)
+   
+   # treat single and multi-word queries differently
+   if (length(grep("\\s", query)) == 0L) {
+      # single word queries must be quoted
+      query <- paste0("\"", query, "\"")
+   } else {   
+      # replace inter-word whitespace by dots (results in match as phrase)
+      query <- gsub("\\s", ".", query)
+   }
+   
+   # add year to query if given
+   if (is.finite(year)) {
+      query <- paste0(query, " ce:year:", year, ":*")
+   }
+   
+   query
+}
+
 # count DBLP entries for a given query
-"dblp.count" <- function(queries = character(0)) {
+"dblp.query" <- function(queries = character(0)) {
    library(XML)
    
    # run DBLP query and parse returned XML document
    counts <- sapply(queries, function(query) {
       xml <- XML::xmlParse(
          file =  paste0(
-            "http://dblp.org/search/api/",      # base URL
-            "?q=", query,                       # query string
-            "&h=0&c=0&f=0&format=xml"           # retrieve only result count (as XML)
+            "http://dblp.org/search/api/",   # base URL
+            "?q=", query,                    # query string
+            "&h=0&c=0&f=0&format=xml"        # retrieve only result count (as XML)
          ),
          isURL = TRUE,
          getDTD = FALSE
@@ -190,10 +218,16 @@
    counts
 }
 
-# count DBLP entries of a search string for each year
-"dblp.countByYear" <- function(query = "", years = 1990:2013, do.plot = FALSE, ...) {
-   queries <- paste0("ce:year:", years, ":* ", query)
-   counts <- dblp.count(queries = queries)
+# count DBLP hits for a given phrase
+"dblp.count" <- function(phrase, year = NA) {
+   dblp.query(dblp.phraseToQueryString(phrase, year = year))
+}
+
+# count DBLP hits for a given phrase by year
+"dblp.count.byYear" <- function(phrase, years = 1990:2013, do.plot = FALSE, ...) {
+   counts <- sapply(years, function(year) {
+      dblp.count(phrase = phrase, year = year)
+   })
    names(counts) <- years
    
    if (isTRUE(do.plot)) {
@@ -204,10 +238,13 @@
 }
 
 # plot several DBLP-by-year count results
-"dblp.countByYear.plot" <- function(counts.list = list(), colors = numeric(0), normalization = "none") {
+"dblp.count.byYear.plot" <- function(counts.list = list(), colors = numeric(0), normalization = "none") {
    # check argument 'counts.list'
    if (!is.list(counts.list)) {
       counts.list <- list(counts.list)
+   }
+   if (length(counts.list) == 0L) {
+      return
    }
    if (is.null(names(counts.list))) {
       names(counts.list) <- seq(length(counts.list))
@@ -241,6 +278,7 @@
          l / sum(l)
       }
    })
+   y.min <- min(as.numeric(unlist(counts.list)))
    y.max <- max(as.numeric(unlist(counts.list)))
    
    # get label of y axis (depends on normnalization method)
@@ -253,7 +291,7 @@
    }
    
    # plot base graph
-   plot(x = x.int, y = NULL, xlim = range(x.int), ylim = c(0, y.max), xlab = "Year", ylab = ylab, main = "Publications by Year", xaxt = "n")
+   plot(x = x.int, y = NULL, xlim = range(x.int), ylim = c(min(0, y.min), y.max), xlab = "Year", ylab = ylab, main = "Publications by Year", xaxt = "n")
    grid(nx = NA, ny = NULL, lwd = 1, lty = 2, col = "gray")
    abline(v = x.at, lwd = 1, lty = 2, col = "gray")
    axis(1, at = x.at, labels = x.at)
@@ -283,5 +321,131 @@
       lwd = 4,
       bg = "white"
    )
+}
+
+"dblp.game" <- function(players = c("P1", "P2"), best.of = 3, score.type = "peak", score.upperFactor = 10, years = 1990:2012) {
+   # type of the scores
+   # "peak":      peak value of the counts
+   # "sum":       sum of all counts
+   # "absdiff":   absolute difference between count in last and first year
+   # "reldiff":   absolute difference between count in last and first year
+   score.type <- match.arg(score.type, c("peak", "sum"))
+   
+   ##
+   ## helper functions
+   ##
+   
+   # plot scoreboard
+   "plot.scoreboard" <- function() {
+      par(mfrow = c(1, 2))
+      
+      # plot area
+      plot(NULL, xlim = c(0, 1), ylim = c(0, 1), axes = FALSE, xlab = "", ylab = "")
+      
+      # "best of" info
+      text(x = 0.5, y = 1.0, labels = paste0("Best of ", best.of, " (", points.needed, " to win)"), adj = c(0.5, 1.0))
+      
+      # points
+      text(x = 0.4, y = 0.7, labels = points[1], cex = 6, adj = c(1.0, 0.5))
+      text(x = 0.6, y = 0.7, labels = points[2], cex = 6, adj = c(0.0, 0.5))
+      text(x = 0.5, y = 0.7, labels = "-", cex = 6, adj = c(0.5, 0.5))
+      
+      # player names
+      text(x = 0.325, y = 0.5, labels = players[1], cex = 1, adj = c(0.5, 0.5))
+      text(x = 0.675, y = 0.5, labels = players[2], cex = 1, adj = c(0.5, 0.5))
+      
+      if (length(countss) == 0L) {
+         plot(NULL, axes = FALSE, xlim = c(0, 1), ylim = c(0, 1), xlab = "", ylab = "")
+      } else {
+         dblp.count.byYear.plot(countss)
+      }
+   }
+   
+   # return index of next player
+   "player.next" <- function(player) {
+      3 - player
+   }
+   
+   ##
+   ## init
+   ##
+   
+   points <- c(0, 0)
+   points.needed <- floor(max(best.of, 1) / 2) + 1
+   best.of <- 2 * points.needed - 1
+   
+   ##
+   ## main loops
+   ##
+   
+   round <- 0
+   repeat {
+      #cat("Round", sum(points) + 1, "\n")
+      #cat(players[1], " ", points[1], "-", points[2], " ", players[2], "\n", sep = "")
+      
+      round <- round + 1
+      player.turn <- (round - 1) %% 2 + 1
+      score.range <- c(-Inf, Inf)
+      scores <- numeric(0)
+      countss <- list()
+      
+      repeat {
+         # show scoreboard
+         plot.scoreboard()
+         
+         # get phrase from current player
+         if (length(countss) == 0L) {
+            score.info <- " (score must be in [1, Inf))"
+         } else {
+            score.info <- paste0(" (score must be in [", scores[length(scores)] + 1, ",", round(score.upperFactor * scores[length(scores)]), "]")
+         }
+         phrase <- readline(paste0(players[player.turn], score.info, ": "))
+         
+         # get raw publication counts for entered phrase
+         counts.raw <- dblp.count.byYear(phrase = phrase, years = years)
+         
+         # turn counts into scores depending on match rules
+         if (score.type == "peak") {
+            counts <- counts.raw
+            score <- max(counts.raw)
+         } else if (score.type == "sum") {
+            counts <- cumsum(counts.raw)
+            score <- counts[length(counts)]
+         }
+         
+         # save scores and counts
+         countss[[length(countss) + 1]] <- counts
+         names(countss)[length(countss)] <- phrase
+         scores <- c(scores, score)
+         
+         cat("(score = ", score, ")\n", sep = "")
+         
+         # switch current player
+         player.turn <- player.next(player.turn)
+         
+         # check if one player won this set
+         win <- FALSE
+         if (length(scores) == 1L) {
+            win <- ((score.type == "peak" && score == 0L) || (score.type == "sum" && score <= 0L))
+         } else {
+            N <- length(scores)
+            win <- ((scores[N] < scores[N - 1]) || (scores[N] > round(score.upperFactor * scores[N - 1])))
+         }
+         
+         if (isTRUE(win)) {
+            plot.scoreboard()
+            points[player.turn] <- points[player.turn] + 1
+            readline(paste0("--> ", players[player.turn], " wins this round!"))
+            break
+         }
+      }
+      
+      # check if game is over
+      if (any(points >= points.needed)) {
+         plot.scoreboard()
+         readline(paste0("--> ", players[player.turn], " wins the match!"))
+         break
+      }
+   }
 }
 

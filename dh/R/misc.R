@@ -231,7 +231,7 @@
    names(counts) <- years
    
    if (isTRUE(do.plot)) {
-      dblp.countByYear.plot(counts.list = counts, ...)
+      dblp.count.byYear.plot(counts.list = counts, ...)
    }
    
    counts
@@ -323,13 +323,13 @@
    )
 }
 
-"dblp.game" <- function(players = c("P1", "P2"), best.of = 3, score.type = "peak", score.upperFactor = 10, years = 1990:2012) {
+"dblp.game" <- function(players = c("P1", "P2"), best.of = 3, score.type = "peak", score.upperFactor = 10, years = 1990:2012, timer.halfLife = 30) {
    # type of the scores
    # "peak":      peak value of the counts
    # "sum":       sum of all counts
    # "absdiff":   absolute difference between count in last and first year
    # "reldiff":   absolute difference between count in last and first year
-   score.type <- match.arg(score.type, c("peak", "sum"))
+   score.type <- match.arg(score.type, c("peak", "sum", "diff"))
    
    ##
    ## helper functions
@@ -399,7 +399,14 @@
          } else {
             score.info <- paste0(" (score must be in [", scores[length(scores)] + 1, ",", round(score.upperFactor * scores[length(scores)]), "]")
          }
-         phrase <- readline(paste0(players[player.turn], score.info, ": "))
+         
+         timer <- round(system.time(phrase <- readline(paste0(players[player.turn], score.info, ": ")))["elapsed"], 2)
+         timer <- max(timer - 5, 0)
+         if (is.finite(timer.halfLife)) {
+            timer.factor <- 2^(-timer / timer.halfLife)
+         } else {
+            timer.factor <- 1
+         }
          
          # get raw publication counts for entered phrase
          counts.raw <- dblp.count.byYear(phrase = phrase, years = years)
@@ -411,6 +418,9 @@
          } else if (score.type == "sum") {
             counts <- cumsum(counts.raw)
             score <- counts[length(counts)]
+         } else if (score.type == "diff") {
+            counts <- counts.raw - counts.raw[1]
+            score <- counts[length(counts)]
          }
          
          # save scores and counts
@@ -418,19 +428,23 @@
          names(countss)[length(countss)] <- phrase
          scores <- c(scores, score)
          
-         cat("(score = ", score, ")\n", sep = "")
-         
          # switch current player
          player.turn <- player.next(player.turn)
          
          # check if one player won this set
          win <- FALSE
          if (length(scores) == 1L) {
-            win <- ((score.type == "peak" && score == 0L) || (score.type == "sum" && score <= 0L))
+            win <- ((score.type %in% c("peak", "sum", "diff")) && score <= 0L)
+            score.lower <- 1
+            score.upper <- Inf
          } else {
             N <- length(scores)
-            win <- ((scores[N] < scores[N - 1]) || (scores[N] > round(score.upperFactor * scores[N - 1])))
+            score.lower <- scores[N - 1] + 1
+            score.upper <- round(timer.factor * ((score.upperFactor * scores[N - 1]) - score.lower) + score.lower)
+            win <- ((scores[N] < score.lower) || (scores[N] > score.upper))
          }
+         
+         cat("(phrase = \"", phrase, "\", score = ", score, ", time = ", timer, "s, time corrected score interval = [", score.lower, ",", score.upper, "])\n", sep = "")
          
          if (isTRUE(win)) {
             plot.scoreboard()

@@ -1,29 +1,53 @@
-===== Released as 0.7.1 (2012-09-11) =====
+Change Log
+==========
+
+
+0.7.1 (2012-09-11)
+------------------
+
 * finished first working version of Kalman filter
 * added function 'centroid' which computes the (weighted) centroid of an image
 * added function "rgaussian" for running Gaussian smoothing
 
-===== Released as 0.7.0 (2012-07-06) =====
+
+0.7.0 (2012-07-06)
+------------------
+
 * added Kalman-filter related code (including a very simple own implementation)
 * added function 'rmedian' which calculates the running median
 
-===== Released as 0.6.9 (2012-05-03) =====
+
+0.6.9 (2012-05-03)
+------------------
+
 * added benchmark functions 'benchmark.sanity' and 'benchmark.matrix' to check
   the performances of various systems
 
-===== Released as 0.6.8 (2012-04-16) =====
+
+0.6.8 (2012-04-16)
+------------------
+
 * added function 'equidistantSubset'
 
-===== Released as 0.6.7 (2012-04-13) =====
+
+0.6.7 (2012-04-13)
+------------------
+
 * added functions 'sv' and 'ld' for saving/loading R objects to/from files of
   the same name
 
-===== Released as 0.6.6 (2012-04-10) =====
+
+0.6.6 (2012-04-10)
+------------------
+
 * added function 'pjacobian' which is a parallel version of 'numDeriv::jacobian'
 * added package 'numDeriv' to suggested packages
 * added debug function 'pst' which is a shortcut for 'print(system.time(...))'
 
-===== Released as 0.6.5 (2012-03-23) =====
+
+0.6.5 (2012-03-23)
+------------------
+
 * added function 'recycle' for the safe recycling of a vector
 * updated argument of function 'isFALSE' to match the format of 'isTRUE'
 * added dummy manual file '.empty.Rd' which can be used for new code object
@@ -33,26 +57,41 @@
 * changed naming convention of documentation files
 * added documentation for some code objects
 
-===== Released as 0.6.4 (2012-02-20) =====
+
+0.6.4 (2012-02-20)
+------------------
+
 * fixed bug in function 'readImage', now an error is triggered if no image
   file was found for a given 'filename' argument
 
-===== Released as 0.6.3 (2012-02-18) =====
+
+0.6.3 (2012-02-18)
+------------------
+
 * changed package startup message to only appear for interactive sessions
 * changed last parameter name of function 'minRequiredVersion' from 'fix'
   to 'patch', removed constraint of checked version to be at least 0.6.0
   and set all three default parameter values to '0L' (this allows easier
   checks for main and subversions, e.g. 'minRequiredVersion(1)')
 
-===== Released as 0.6.2 (2012-02-17) =====
+
+0.6.2 (2012-02-17)
+------------------
+
 * added function 'match.args' which behaves similar to 'match.arg' with
   'several.ok=TRUE' but with some more security checks/features
 
-===== Released as 0.6.1 (2012-02-16) =====
+
+0.6.1 (2012-02-16)
+------------------
+
 * updated function 'is.directory' to be more robust concerning its inputs
   (e.g. 'is.directory(NULL)' now returns 'NULL', as expected)
 
-===== Released as 0.6.0 (2012-02-15) =====
+
+0.6.0 (2012-02-15)
+------------------
+
 * added function 'minRequiredVersion' to ensure a certain version of this
   package is used
 * added function 'is.directory' to check if a file exists and if it is a
@@ -60,31 +99,49 @@
 * added function 'paste0' as wrapper for 'paste' with 'sep=""'
 * added function 'clip' to clip values of objects to a certain range
 
-===== Released as 0.5.5 (2012-02-14) =====
+
+0.5.5 (2012-02-14)
+------------------
+
 * added parameter 'return' for function 'sm' which causes the working
   directory to be set to the old value after changing to the specified
   directory and including the file 'main.R' ('return' is 'FALSE' by default,
   so the standard behavior is identical to previous versions)
 
-===== Released as 0.5.4 (2012-01-18) =====
+
+0.5.4 (2012-01-18)
+------------------
+
 * added function 'scurve' which plots a curve of a function and shades parts
   of the area under the curve
 
-===== Released as 0.5.3 (2012-01-16) =====
+
+0.5.3 (2012-01-16)
+------------------
+
 * renamed function 'st1' to 'st'
 * updated functions 'st' and 'out' to better deal with output of large lists
 
-===== Released as 0.5.2 (2012-01-16) =====
+
+0.5.2 (2012-01-16)
+------------------
+
 * fixed bug in function 'out' which occured if an object name was too long
 * added function 'st1' as shortcut for 'str' with maximum level 1 (useful
   for displaying largely nested list structures)
 
-===== Released as 0.5.1 (2011-11-30) =====
+
+0.5.1 (2011-11-30)
+------------------
+
 * added function 'finite' which returns all finite elements of an object
 * added function 'reaload.package' to entirely reload a package (e.g. after
   re-installing a package)
 
-===== Released as 0.5.0 (2011-11-29) =====
+
+0.5.0 (2011-11-29)
+------------------
+
 * rewrote and reorganized the functions for image display and colorization,
   'pm(X)' is now a wrapper for 'pr(colorize(X))', 'pr' is a function for
   _p_lotting _r_aster images and 'colorize' can now also use an entire
@@ -104,21 +161,33 @@
 * added function 'along' as an alias for 'seq_along' or 'seq(along=)'
 * fixed typo in this change log
 
-===== Released as 0.4.4 (2011-11-22) =====
+
+0.4.4 (2011-11-22)
+------------------
+
 * updated function 'out' to work with any kind of R object (instead of just
   scalars as before) and improved the output format
 * removed function 'lso' which was replaced by function 'objects.sizes' in
   version 0.4.0
 
-===== Released as 0.4.3 (2011-11-21) =====
+
+0.4.3 (2011-11-21)
+------------------
+
 * added function 'colorhash' to map an arbitrary R object to a color (based
   on package 'digest', which was added to the suggested packages)
 
-===== Released as 0.4.2 (2011-11-09) =====
+
+0.4.2 (2011-11-09)
+------------------
+
 * added function 'kurtosis' for the calculation of the kurtosis of discrete
   probability distributions
 
-===== Released as 0.4.1 (2011-11-08) =====
+
+0.4.1 (2011-11-08)
+------------------
+
 * fixed bug in function 'readImage' which caused pixmap and tiff images
   not to be loaded correctly (wrong use of 'capture.output')
 * fixed bug in error message of conversion to gray scale images in function
@@ -131,7 +200,10 @@
 * added function 'entropy' to calculate the entropy of a discrete
   probability distribution
 
-===== Released as 0.4.0 (2011-11-07) =====
+
+0.4.0 (2011-11-07)
+------------------
+
 * added package namespace
 * changed 'init' and 'step' functions for progress bar to S4 methods
 * added package 'methods' in the package dependencies
@@ -167,23 +239,39 @@
 * updated function 'is.installed' to use 'system.file' instead of
   'installed.packages' for performance reasons
 
-===== Released 0.1.3, 0.1.4, 0.1.5, 0.1.6 =====
+
+0.1.3, 0.1.4, 0.1.5, 0.1.6
+--------------------------
+
 * added usage of 'rasterImage' in the function 'pm'
 * added function 'indexIntervalLengths.toEndpoints'
 * added function 'is.installed' to check if a package is installed
 * minor fixes for progress bar (more robust use of 'Sys.getenv("COLUMNS")')
 
-===== Released as 0.1.2 (2010-10-20) =====
+
+0.1.2 (2010-10-20)
+------------------
+
 * moved file 'geometry.R' to 'math.R'
 * some minor additions
 
-===== Released as 0.1.1 (2010-08-27) =====
+
+0.1.1 (2010-08-27)
+------------------
+
 * added file 'geometry.R'
 
-===== Released as 0.1.0 (2010-08-25) =====
+
+0.1.0 (2010-08-25)
+------------------
+
 * added class 'progressBar'
 * added function 'sec.dhms'
 * added some other small functions
 
-===== Released as 0.0.1 (2010-08-20) =====
+
+0.0.1 (2010-08-20)
+------------------
+
 First version.
+
